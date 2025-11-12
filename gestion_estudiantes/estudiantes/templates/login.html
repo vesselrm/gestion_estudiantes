@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Inicio de Sesión</title>
+    <style>
+        body {
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #e8f0ff;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        header {
+            background: linear-gradient(90deg, #0056b3, #007bff);
+            color: white;
+            text-align: center;
+            padding: 25px 0;
+            font-size: 26px;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        main {
+            max-width: 400px;
+            margin: 100px auto 150px;
+            background: #ffffff;
+            padding: 30px 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+
+        h1 {
+            text-align: center;
+            color: #003366;
+            margin-bottom: 25px;
+        }
+
+        form p {
+            margin-bottom: 15px;
+        }
+
+        label {
+            font-weight: bold;
+            color: #003366;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 15px;
+            margin-bottom: 10px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px 0;
+            border: none;
+            border-radius: 8px;
+            background: linear-gradient(90deg, #007bff, #339cff);
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s, background 0.3s;
+        }
+
+        button:hover {
+            background: linear-gradient(90deg, #0056b3, #007bff);
+            transform: scale(1.05);
+        }
+
+        .error {
+            color: red;
+            font-size: 13px;
+            margin-top: 5px;
+            text-align: center;
+        }
+
+        a {
+            display: block;
+            text-align: center;
+            margin-top: 15px;
+            text-decoration: none;
+            color: #0056b3;
+            font-weight: bold;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        footer {
+            background-color: #003366;
+            color: #ffffff;
+            text-align: center;
+            padding: 15px 0;
+            font-size: 14px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            box-shadow: 0 -2px 8px rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <strong>🎓 Sistema de Gestión Académica</strong>
+    </header>
+
+    <main>
+        <h1>Iniciar Sesión</h1>
+        <form method="POST">
+            {% csrf_token %}
+
+            {% if messages %}
+                {% for msg in messages %}
+                    <div class="error">{{ msg }}</div>
+                {% endfor %}
+            {% endif %}
+
+            <p>
+                <label for="nombre_usuario">Usuario:</label>
+                <input type="text" name="nombre_usuario" id="nombre_usuario" placeholder="Nombre de usuario" required>
+            </p>
+            <p>
+                <label for="contrasena">Contraseña:</label>
+                <input type="password" name="contrasena" id="contrasena" placeholder="Contraseña" required>
+            </p>
+
+            <button type="submit">Entrar</button>
+        </form>
+    </main>
+
+    <footer>
+        &copy; {{ now|date:"Y" }} Sistema Académico — Todos los derechos reservados
+    </footer>
+</body>
+</html>

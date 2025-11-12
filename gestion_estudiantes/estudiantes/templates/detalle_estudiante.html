@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Detalle del Estudiante</title>
+    <style>
+        /* ======= ESTILOS GENERALES ======= */
+        body {
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #e8f0ff;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        /* ======= ENCABEZADO ======= */
+        header {
+            background: linear-gradient(90deg, #0056b3, #007bff);
+            color: white;
+            text-align: center;
+            padding: 25px 0;
+            font-size: 26px;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        /* ======= CONTENIDO PRINCIPAL ======= */
+        main {
+            max-width: 700px;
+            margin: 60px auto 100px;
+            background: #ffffff;
+            padding: 30px 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+
+        h1 {
+            color: #003366;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        p {
+            font-size: 16px;
+            margin: 10px 0;
+        }
+
+        strong {
+            color: #003366;
+        }
+
+        /* ======= TABLA ======= */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 25px;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th {
+            background-color: #0056b3;
+            color: white;
+            padding: 10px;
+            text-align: center;
+        }
+
+        td {
+            background-color: #f9f9f9;
+            padding: 10px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+        }
+
+        /* ======= BOTONES Y ENLACES ======= */
+        .botones {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .botones a {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 5px;
+            text-decoration: none;
+            border-radius: 8px;
+            color: white;
+            font-weight: bold;
+            transition: transform 0.2s, background 0.3s;
+        }
+
+        .btn-volver {
+            background: linear-gradient(90deg, #007bff, #339cff);
+        }
+
+        .btn-volver:hover {
+            background: linear-gradient(90deg, #0056b3, #007bff);
+            transform: scale(1.05);
+        }
+
+        .btn-editar {
+            background: linear-gradient(90deg, #28a745, #4cd964);
+        }
+
+        .btn-editar:hover {
+            background: linear-gradient(90deg, #218838, #3bd65a);
+            transform: scale(1.05);
+        }
+
+        .btn-eliminar {
+            background: linear-gradient(90deg, #dc3545, #ff5c75);
+        }
+
+        .btn-eliminar:hover {
+            background: linear-gradient(90deg, #c82333, #ff3b5b);
+            transform: scale(1.05);
+        }
+
+        /* ======= PIE DE PÁGINA ======= */
+        footer {
+            background-color: #003366;
+            color: #ffffff;
+            text-align: center;
+            padding: 15px 0;
+            font-size: 14px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <strong>🎓 Sistema de Gestión Académica</strong>
+    </header>
+
+    <main>
+        <h1>Detalle del Estudiante</h1>
+
+        <p><strong>Cédula:</strong> {{ estudiante.cedula }}</p>
+        <p><strong>Nombres:</strong> {{ estudiante.nombres }}</p>
+        <p><strong>Apellidos:</strong> {{ estudiante.apellidos }}</p>
+        <p><strong>Cohorte:</strong> {{ estudiante.cohorte_mes }} {{ estudiante.cohorte_anio }}</p>
+        <p><strong>Especialidad:</strong> {{ estudiante.get_especialidad_display }}</p>
+        <p><strong>Extensión:</strong> {{ estudiante.extension }}</p>
+
+        <h3 style="color:#003366; margin-top:30px;">📄 Documentos Registrados</h3>
+        <table>
+            <tr>
+                <th>Tipo de Documento</th>
+                <th>Estado</th>
+            </tr>
+            {% for doc in documentos %}
+            <tr>
+                <td>{{ doc.tipo_documento }}</td>
+                <td>{{ doc.estado_documento }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="2">No hay documentos registrados</td>
+            </tr>
+            {% endfor %}
+        </table>
+
+        <div class="botones">
+            <a href="{% url 'editar_estudiante' estudiante.id %}" class="btn-editar">✏️ Editar</a>
+            <a href="{% url 'listar_estudiantes' %}" class="btn-volver">← Volver a la lista</a>
+        </div>
+    </main>
+
+    <footer>
+        &copy; {{ now|date:"Y" }} Sistema Académico — Todos los derechos reservados
+    </footer>
+
+    
+</body>
+</html>

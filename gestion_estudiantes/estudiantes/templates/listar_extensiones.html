@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Extensiones</title>
+
+    <!-- CDN de DataTables -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.dataTables.min.css">
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+
+    <style>
+        /* ======= ESTILOS GENERALES ======= */
+        body {
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #e8f0ff;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* ======= ENCABEZADO ======= */
+        header {
+            background: linear-gradient(90deg, #0056b3, #007bff);
+            color: white;
+            text-align: center;
+            padding: 25px 0;
+            font-size: 26px;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        /* ======= CONTENIDO PRINCIPAL ======= */
+        main {
+            max-width: 1000px;
+            margin: 60px auto 100px;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+
+        h1 {
+            color: #003366;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        /* ======= BOTONES ======= */
+        .btn {
+            display: inline-block;
+            text-decoration: none;
+            background: linear-gradient(90deg, #007bff, #339cff);
+            color: white;
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: bold;
+            transition: background 0.3s, transform 0.2s;
+        }
+
+        .btn:hover {
+            background: linear-gradient(90deg, #0056b3, #007bff);
+            transform: scale(1.05);
+        }
+
+        .top-actions {
+            text-align: right;
+            margin-bottom: 15px;
+        }
+
+        /* ======= TABLA ======= */
+        table.dataTable {
+            border-collapse: collapse !important;
+            width: 100% !important;
+        }
+
+        th {
+            background-color: #0056b3;
+            color: white;
+            text-align: center;
+        }
+
+        td {
+            text-align: center;
+        }
+
+        /* ======= PIE DE PÁGINA ======= */
+        footer {
+            background-color: #003366;
+            color: #ffffff;
+            text-align: center;
+            padding: 15px 0;
+            font-size: 14px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        /* ======= BOTÓN INICIO ======= */
+        .back-home {
+            display: inline-block;
+            margin-top: 25px;
+            text-decoration: none;
+            background: linear-gradient(90deg, #007bff, #339cff);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: background 0.3s, transform 0.2s;
+        }
+
+        .back-home:hover {
+            background: linear-gradient(90deg, #0056b3, #007bff);
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <strong>🎓 Sistema de Gestión Académica</strong>
+    </header>
+
+    <main>
+        <h1>Lista de Extensiones</h1>
+
+        <div class="top-actions">
+            <a href="{% url 'registrar_extension' %}" class="btn">➕ Agregar Extensión</a>
+        </div>
+
+        <table id="tablaExtensiones" class="display responsive nowrap" style="width:100%">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Dirección</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for ext in extensiones %}
+                <tr>
+                    <td>{{ ext.id }}</td>
+                    <td>{{ ext.nombre_extension }}</td>
+                    <td>{{ ext.direccion_extension }}</td>
+                    <td>
+                        <a href="{% url 'editar_extension' ext.id %}" class="btn btn-edit">✏️ Editar</a>
+                        <a href="{% url 'eliminar_extension' ext.id %}" class="btn btn-delete">🗑️ Eliminar</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="4">No hay extensiones registradas.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div style="text-align:center;">
+            <a href="{% url 'home' %}" class="back-home">🏠 Volver al Inicio</a>
+        </div>
+    </main>
+
+    <footer>
+        &copy; {{ now|date:"Y" }} Sistema Académico — Todos los derechos reservados
+    </footer>
+
+    <!-- Activar DataTables -->
+    <script>
+        $(document).ready(function () {
+            $('#tablaExtensiones').DataTable({
+                responsive: true,
+                language: {
+                    url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json"
+                },
+                pageLength: 5
+            });
+        });
+    </script>
+</body>
+</html>

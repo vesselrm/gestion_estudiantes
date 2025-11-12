@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Extensión</title>
+    <style>
+        /* ======= ESTILOS GENERALES ======= */
+        body {
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #e8f0ff;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        /* ======= ENCABEZADO ======= */
+        header {
+            background: linear-gradient(90deg, #0056b3, #007bff);
+            color: white;
+            text-align: center;
+            padding: 25px 0;
+            font-size: 26px;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        /* ======= FORMULARIO ======= */
+        main {
+            max-width: 700px;
+            margin: 60px auto 100px;
+            background: #ffffff;
+            padding: 30px 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+
+        h1 {
+            color: #003366;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        form p {
+            margin-bottom: 15px;
+        }
+
+        label {
+            font-weight: bold;
+            color: #003366;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 15px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+
+        /* ======= BOTONES ======= */
+        button {
+            margin-top: 20px;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            background: linear-gradient(90deg, #007bff, #339cff);
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: transform 0.2s, background 0.3s;
+        }
+
+        button:hover {
+            background: linear-gradient(90deg, #0056b3, #007bff);
+            transform: scale(1.05);
+        }
+
+        a {
+            display: inline-block;
+            margin-top: 20px;
+            text-decoration: none;
+            color: #0056b3;
+            font-weight: bold;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* ======= PIE DE PÁGINA ======= */
+        footer {
+            background-color: #003366;
+            color: #ffffff;
+            text-align: center;
+            padding: 15px 0;
+            font-size: 14px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        /* ======= MENSAJES DE ERROR ======= */
+        .error {
+            color: red;
+            font-size: 13px;
+            margin-top: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <strong>🎓 Sistema de Gestión Académica</strong>
+    </header>
+
+    <main>
+        <h1>Editar Extensión: {{ extension.nombre_extension }}</h1>
+
+        <form id="formEditarExtension" method="POST" novalidate>
+            {% csrf_token %}
+            {{ form.as_p }}
+
+            <button type="submit">Actualizar</button>
+        </form>
+
+        <div style="text-align:center;">
+            <a href="{% url 'listar_extensiones' %}">← Volver a la lista</a>
+        </div>
+    </main>
+
+    <footer>
+        &copy; {{ now|date:"Y" }} Sistema Académico — Todos los derechos reservados
+    </footer>
+
+    <script>
+        // ======= VALIDACIONES DEL FORMULARIO =======
+        document.getElementById("formEditarExtension").addEventListener("submit", function(event) {
+            const inputs = this.querySelectorAll("input[type='text'], input[type='email'], input[type='number']");
+            let valido = true;
+
+            // Eliminar mensajes previos
+            this.querySelectorAll(".error").forEach(e => e.remove());
+
+            inputs.forEach(input => {
+                if (!input.value.trim()) {
+                    valido = false;
+                    mostrarError(input, "Este campo es obligatorio");
+                } else if (input.type === "email" && !/\S+@\S+\.\S+/.test(input.value)) {
+                    valido = false;
+                    mostrarError(input, "Ingrese un correo válido");
+                }
+            });
+
+            if (!valido) {
+                event.preventDefault();
+                alert("Por favor, complete correctamente los campos resaltados.");
+            }
+        });
+
+        function mostrarError(input, mensaje) {
+            const error = document.createElement("div");
+            error.classList.add("error");
+            error.textContent = mensaje;
+            input.insertAdjacentElement("afterend", error);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Inicio</title>
+    <style>
+        /* ======= ESTILOS GENERALES ======= */
+        body {
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #e8f0ff;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* ======= ENCABEZADO ======= */
+        header {
+            background: linear-gradient(90deg, #0056b3, #007bff);
+            color: white;
+            text-align: center;
+            padding: 25px 0;
+            font-size: 26px;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        /* Botón cerrar sesión en el encabezado */
+        .logout {
+            position: absolute;
+            right: 20px;
+            top: 25px;
+            background: linear-gradient(90deg, #dc3545, #ff5c75);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: transform 0.2s, background 0.3s;
+        }
+
+        .logout:hover {
+            background: linear-gradient(90deg, #c82333, #ff3b5b);
+            transform: scale(1.05);
+        }
+
+        /* ======= CONTENIDO PRINCIPAL ======= */
+        main {
+            margin: 60px auto;
+            max-width: 900px;
+            text-align: center;
+            padding: 20px;
+        }
+
+        h2 {
+            font-size: 28px;
+            color: #003366;
+        }
+
+        p {
+            font-size: 18px;
+            margin-bottom: 40px;
+        }
+
+        /* ======= TARJETAS ======= */
+        .card-container {
+            display: flex;
+            justify-content: space-between; /* Ajusta el espacio entre las cards */
+            flex-wrap: nowrap;              /* Evita que se rompan a otra línea */
+            gap: 30px;                      /* Mantiene el espacio entre ellas */
+        }
+
+        .card {
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            padding: 30px;
+            width: 280px;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.25);
+        }
+
+        .card a {
+            display: inline-block;
+            text-decoration: none;
+            background: linear-gradient(90deg, #007bff, #339cff);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background 0.3s, transform 0.2s;
+        }
+
+        .card a:hover {
+            background: linear-gradient(90deg, #0056b3, #007bff);
+            transform: scale(1.05);
+        }
+
+        /* ======= PIE DE PÁGINA ======= */
+        footer {
+            background-color: #003366;
+            color: #ffffff;
+            text-align: center;
+            padding: 15px 0;
+            font-size: 14px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <strong>🎓 Sistema de Gestión Académica</strong>
+        <a href="{% url 'logout_usuario' %}" class="logout">Cerrar sesión</a>
+    </header>
+
+    <main>
+        <h2>Bienvenido</h2>
+
+        <div class="card-container">
+            <div class="card">
+                <h3>📘 Lista de Estudiantes</h3>
+                <p>Visualiza y gestiona los registros de los estudiantes inscritos.</p>
+                <a href="{% url 'listar_estudiantes' %}">Ir</a>
+            </div>
+
+            <div class="card">
+                <h3>🏫 Lista de Extensiones</h3>
+                <p>Consulta las extensiones académicas disponibles en el sistema.</p>
+                <a href="{% url 'listar_extensiones' %}">Ir</a>
+            </div>
+
+            <div class="card">
+                <h3>👤 Lista de Usuarios</h3>
+                <p>Gestiona los usuarios del sistema, incluyendo roles y credenciales.</p>
+                <a href="{% url 'listar_usuarios' %}">Ir</a>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        &copy; {{ now|date:"Y" }} Sistema Académico — Todos los derechos reservados
+    </footer>
+</body>
+</html>
