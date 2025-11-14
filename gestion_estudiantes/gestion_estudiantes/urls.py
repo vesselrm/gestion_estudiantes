@@ -4,6 +4,6 @@ from estudiantes import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.login_usuario, name='login_usuario'),  # raíz /
+    path('', views.home, name='home'),  # raíz /
     path('', include('estudiantes.urls')),  # incluye todas las demás rutas
 ]

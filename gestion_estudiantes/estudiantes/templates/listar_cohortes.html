@@ -1,52 +1,55 @@
 {% extends 'home.html' %}
 {% load static %}
 
-{% block title %}Lista de Estudiantes{% endblock %}
+{% block title %}Lista de Cohortes{% endblock %}
 
 {% block content %}
-<h2>Lista de Estudiantes</h2>
+<h2>Lista de Cohortes</h2>
 
 <div style="max-width:1000px; margin:0 auto; background:white; padding:30px 40px; border-radius:12px; box-shadow:0 4px 10px rgba(0,0,0,0.15);">
 
+
     <div style="text-align:right; margin-bottom:20px;">
+
         {# ---- SOLO ADMIN Y SECRETARIA pueden registrar ---- #}
         {% if request.session.usuario_rol == "Administrador" or request.session.usuario_rol == "Secretaria" %}
-        <a href="{% url 'registrar_estudiante' %}" class="btn-action">➕ Registrar nuevo estudiante</a>
+        <a href="{% url 'registrar_cohorte' %}" class="btn-action">➕ Registrar nuevo cohorte</a>
         {% endif %}
+
     </div>
 
-    <table id="tablaEstudiantes" class="display responsive nowrap" style="width:100%">
+
+    <table id="tablaCohortes" class="display responsive nowrap" style="width:100%">
         <thead>
             <tr>
-                <th>Cédula</th>
-                <th>Nombres</th>
-                <th>Apellidos</th>
+                <th>Nombre</th>
+                <th>Mes</th>
+                <th>Año</th>
                 <th>Acciones</th>
             </tr>
         </thead>
         <tbody>
-            {% for e in estudiantes %}
+            {% for c in cohortes %}
             <tr>
-                <td>{{ e.cedula }}</td>
-                <td>{{ e.nombres }}</td>
-                <td>{{ e.apellidos }}</td>
+                <td>{{ c.nombre_cohorte }}</td>
+                <td>{{ c.mes }}</td>
+                <td>{{ c.anio }}</td>
                 <td>
-                    {# ---- VER disponible para todos ---- #}
-                    <a href="{% url 'detalle_estudiante' e.id %}" class="btn-icon view" title="Ver">
-                        <i class="fas fa-eye"></i>
-                    </a>
+
                     {# ---- SOLO ADMIN puede editar ---- #}
                     {% if request.session.usuario_rol == "Administrador" %}
-                    <a href="{% url 'editar_estudiante' e.id %}" class="btn-icon edit" title="Editar">
+                    <a href="{% url 'editar_cohorte' c.id %}" class="btn-icon" title="Editar">
                         <i class="fas fa-edit"></i>
                     </a>
                     {% endif %}
+
                     {# ---- SOLO ADMIN puede eliminar ---- #}
                     {% if request.session.usuario_rol == "Administrador" %}
-                    <a href="{% url 'eliminar_estudiante' e.id %}" class="btn-icon delete" title="Eliminar">
+                    <a href="{% url 'eliminar_cohorte' c.id %}" class="btn-icon delete" title="Eliminar">
                         <i class="fas fa-trash-alt"></i>
                     </a>
                     {% endif %}
+
                 </td>
             </tr>
             {% endfor %}
@@ -59,7 +62,7 @@
 </div>
 
 <style>
-/* ===== Botones principales ===== */
+/* ===== Botones ===== */
 .btn-action, .btn-home {
     display: inline-block;
     text-decoration: none;
@@ -71,11 +74,12 @@
     background: linear-gradient(90deg,#1c4a7c,#2e6aa3);
     color: white;
 }
+
 .btn-action:hover, .btn-home:hover {
     transform: scale(1.05);
 }
 
-/* ===== Botones icono ===== */
+/* Botones icono */
 .btn-icon {
     display: inline-block;
     text-decoration: none;
@@ -86,24 +90,17 @@
     color: white;
     transition: all 0.3s ease;
 }
+
 .btn-icon i {
     pointer-events: none;
 }
 
-/* Ver */
-.btn-icon.view {
-    background-color: #17a2b8;
-}
-.btn-icon.view:hover {
-    background-color: #138496;
-    transform: scale(1.2);
-}
-
 /* Editar */
-.btn-icon.edit {
+.btn-icon[href*="editar"] {
     background-color: #ffc107;
 }
-.btn-icon.edit:hover {
+
+.btn-icon[href*="editar"]:hover {
     background-color: #e0a800;
     transform: scale(1.2);
 }
@@ -112,6 +109,7 @@
 .btn-icon.delete {
     background-color: #dc3545;
 }
+
 .btn-icon.delete:hover {
     background-color: #c82333;
     transform: scale(1.2);
@@ -123,6 +121,7 @@ table.dataTable th {
     color: white !important;
     text-align: center;
 }
+
 table.dataTable td {
     text-align: center;
 }
@@ -144,7 +143,7 @@ body {
 <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
 <script>
 $(document).ready(function () {
-    $('#tablaEstudiantes').DataTable({
+    $('#tablaCohortes').DataTable({
         responsive: true,
         language: { url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json" },
         pageLength: 5

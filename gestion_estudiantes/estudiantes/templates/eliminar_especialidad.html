@@ -1,7 +1,7 @@
 {% extends 'home.html' %}
 {% load static %}
 
-{% block title %}Eliminar Estudiante{% endblock %}
+{% block title %}Eliminar Especialidad{% endblock %}
 
 {% block content %}
 <div style="max-width:600px; margin:100px auto; background:white; padding:40px 50px; border-radius:12px; box-shadow:0 4px 10px rgba(0,0,0,0.15); text-align:center;">
@@ -9,8 +9,8 @@
     <h2 style="color:#003366; margin-bottom:25px;">Confirmar eliminación</h2>
 
     <p style="font-size:17px; color:#444; margin-bottom:40px;">
-        ¿Estás seguro de que deseas eliminar al estudiante<br>
-        <strong>{{ estudiante.nombres }} {{ estudiante.apellidos }}</strong>?
+        ¿Estás seguro de que deseas eliminar la especialidad<br>
+        <strong>{{ especialidad.nombre }}</strong>?
     </p>
 
     <form method="POST">
@@ -19,7 +19,7 @@
             <button type="submit" style="padding:12px 25px; border:none; border-radius:8px; background:linear-gradient(90deg,#dc3545,#ff5c75); color:white; font-weight:bold; cursor:pointer; transition:all 0.3s;">
                 🗑️ Sí, eliminar
             </button>
-            <a href="{% url 'listar_estudiantes' %}" style="padding:12px 25px; border-radius:8px; background:linear-gradient(90deg,#1c4a7c,#2e6aa3); color:white; font-weight:bold; text-decoration:none; cursor:pointer; transition:all 0.3s;">
+            <a href="{% url 'listar_especialidades' %}" style="padding:12px 25px; border-radius:8px; background:linear-gradient(90deg,#1c4a7c,#2e6aa3); color:white; font-weight:bold; text-decoration:none; cursor:pointer; transition:all 0.3s;">
                 ↩️ Cancelar
             </a>
         </div>

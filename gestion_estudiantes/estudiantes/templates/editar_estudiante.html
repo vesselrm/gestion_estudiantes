@@ -1,208 +1,154 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Editar Estudiante</title>
-    <style>
-        /* ======= ESTILOS GENERALES ======= */
-        body {
-            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #e8f0ff;
-            margin: 0;
-            padding: 0;
-            color: #333;
-        }
+{% extends 'home.html' %}
+{% load static %}
 
-        /* ======= ENCABEZADO ======= */
-        header {
-            background: linear-gradient(90deg, #0056b3, #007bff);
-            color: white;
-            text-align: center;
-            padding: 25px 0;
-            font-size: 26px;
-            letter-spacing: 1px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
+{% block title %}Editar Estudiante{% endblock %}
 
-        /* ======= FORMULARIO ======= */
-        main {
-            max-width: 700px;
-            margin: 60px auto 100px;
-            background: #ffffff;
-            padding: 30px 40px;
-            border-radius: 12px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-        }
+{% block content %}
+<h2>Editar Estudiante: {{ estudiante.nombres }} {{ estudiante.apellidos }}</h2>
 
-        h1 {
-            color: #003366;
-            text-align: center;
-            margin-bottom: 20px;
-        }
+<div style="max-width:800px; margin:0 auto; background:white; padding:30px 40px; border-radius:12px; box-shadow:0 4px 10px rgba(0,0,0,0.15);">
 
-        form p {
-            margin-bottom: 15px;
-        }
+    <form id="formEditarEstudiante" method="POST" novalidate>
+        {% csrf_token %}
 
-        label {
-            font-weight: bold;
-            color: #003366;
-        }
+        {% for field in form %}
+            <div style="margin-bottom: 18px;">
+                <label for="{{ field.id_for_label }}" style="font-weight:bold; color:#003366; display:block; margin-bottom:6px;">
+                    {{ field.label }}{% if field.field.required %} *{% endif %}
+                </label>
 
-        input[type="text"],
-        input[type="email"],
-        input[type="number"],
-        select {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            font-size: 15px;
-            transition: border-color 0.3s;
-        }
+                {% if field.field.widget.input_type in "text email number" %}
+                    <input type="{{ field.field.widget.input_type }}" name="{{ field.html_name }}" value="{{ field.value|default_if_none:'' }}" id="{{ field.id_for_label }}" class="form-field" placeholder="Ingrese {{ field.label }}">
+                {% elif field.field.widget.input_type == "select" %}
+                    <select name="{{ field.html_name }}" id="{{ field.id_for_label }}" class="form-field">
+                        {% for val, text in field.field.choices %}
+                            <option value="{{ val }}" {% if field.value == val %}selected{% endif %}>{{ text }}</option>
+                        {% endfor %}
+                    </select>
+                {% else %}
+                    {{ field }}
+                {% endif %}
 
-        input:focus,
-        select:focus {
-            border-color: #007bff;
-            outline: none;
-        }
+                {% if field.help_text %}
+                    <small style="display:block; color:#555; margin-top:3px;">{{ field.help_text }}</small>
+                {% endif %}
 
-        /* ======= TABLA ======= */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-            border-radius: 8px;
-            overflow: hidden;
-        }
-
-        th {
-            background-color: #0056b3;
-            color: white;
-            padding: 10px;
-            text-align: center;
-        }
-
-        td {
-            background-color: #f9f9f9;
-            padding: 10px;
-            text-align: center;
-            border-bottom: 1px solid #ddd;
-        }
-
-        /* ======= BOTONES ======= */
-        button {
-            margin-top: 20px;
-            padding: 12px 25px;
-            border: none;
-            border-radius: 8px;
-            background: linear-gradient(90deg, #007bff, #339cff);
-            color: white;
-            font-size: 16px;
-            cursor: pointer;
-            transition: transform 0.2s, background 0.3s;
-        }
-
-        button:hover {
-            background: linear-gradient(90deg, #0056b3, #007bff);
-            transform: scale(1.05);
-        }
-
-        a {
-            display: inline-block;
-            margin-top: 20px;
-            text-decoration: none;
-            color: #0056b3;
-            font-weight: bold;
-        }
-
-        a:hover {
-            text-decoration: underline;
-        }
-
-        /* ======= PIE DE PÁGINA ======= */
-        footer {
-            background-color: #003366;
-            color: #ffffff;
-            text-align: center;
-            padding: 15px 0;
-            font-size: 14px;
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.2);
-        }
-
-        /* ======= MENSAJES DE ERROR ======= */
-        .error {
-            color: red;
-            font-size: 13px;
-            margin-top: 4px;
-        }
-    </style>
-</head>
-<body>
-    <header>
-        <strong>🎓 Sistema de Gestión Académica</strong>
-    </header>
-
-    <main>
-        <h1>Editar Estudiante</h1>
-
-        <form id="formEditarEstudiante" method="POST" novalidate>
-            {% csrf_token %}
-            {{ form.as_p }}
-
-            <h3 style="color:#003366;">📄 Documentos</h3>
-            <table>
-                <tr>
-                    <th>Tipo</th>
-                    <th>Estado</th>
-                </tr>
-                {% for doc in documentos %}
-                <tr>
-                    <td>{{ doc.tipo_documento }}</td>
-                    <td>
-                        <select name="{{ doc.tipo_documento }}">
-                            {% for e in estados %}
-                                <option value="{{ e }}" {% if e == doc.estado_documento %}selected{% endif %}>
-                                    {{ e }}
-                                </option>
-                            {% endfor %}
-                        </select>
-                    </td>
-                </tr>
+                {% for error in field.errors %}
+                    <div class="error">{{ error }}</div>
                 {% endfor %}
-            </table>
+            </div>
+        {% endfor %}
 
-            <button type="submit">Guardar Cambios</button>
-        </form>
+        <h3 style="color:#003366; margin-top:25px;">📄 Documentos</h3>
+        <table style="width:100%; border-collapse: collapse; border-radius:8px; overflow:hidden;">
+            <tr style="background:#1c4a7c; color:white;">
+                <th>Tipo de Documento</th>
+                <th>Estado</th>
+            </tr>
+            {% for doc in documentos %}
+            <tr>
+                <td style="padding:10px; border-bottom:1px solid #ddd;">{{ doc.tipo_documento }}</td>
+                <td style="padding:10px; border-bottom:1px solid #ddd;">
+                    <select name="{{ doc.tipo_documento }}" class="form-field">
+                        {% for e in estados %}
+                            <option value="{{ e }}" {% if e == doc.estado_documento %}selected{% endif %}>{{ e }}</option>
+                        {% endfor %}
+                    </select>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
 
-        <div style="text-align:center;">
-            <a href="{% url 'listar_estudiantes' %}">← Volver a la lista</a>
-        </div>
-    </main>
+        <button type="submit" style="width:100%; padding:14px; font-size:16px; border-radius:8px; border:none; background:linear-gradient(90deg,#1c4a7c,#2e6aa3); color:white; font-weight:bold; cursor:pointer; transition:all 0.3s; margin-top:20px;">
+            Guardar Cambios
+        </button>
+    </form>
 
-    <footer>
-        &copy; {{ now|date:"Y" }} Sistema Académico — Todos los derechos reservados
-    </footer>
+    <div style="text-align:center; margin-top:20px;">
+        <a href="{% url 'listar_estudiantes' %}" style="color:#1c4a7c; font-weight:bold; text-decoration:none;">← Volver a la lista</a>
+    </div>
+</div>
+
+<style>
+/* ===== Estilo moderno para inputs y selects ===== */
+.form-field {
+    width: 100%;
+    padding: 12px 15px;
+    font-size: 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.form-field:focus {
+    border-color: #2e6aa3;
+    box-shadow: 0 0 6px rgba(46,106,163,0.3);
+    outline: none;
+}
+
+.form-field::placeholder {
+    color: #999;
+}
+
+/* Errores */
+.error {
+    color: #dc3545;
+    font-size: 13px;
+    margin-top: 4px;
+}
+
+/* Tabla de documentos */
+table th, table td {
+    text-align: left;
+}
+
+table tr:nth-child(even) td {
+    background-color: #f9f9f9;
+}
+</style>
 
 <script>
+    // ===== Validaciones del formulario =====
+    document.getElementById("formEditarEstudiante").addEventListener("submit", function(event) {
+        const inputs = this.querySelectorAll("input[type='text'], input[type='email'], input[type='number']");
+        let valido = true;
+
+        this.querySelectorAll(".error").forEach(e => e.remove());
+
+        inputs.forEach(input => {
+            if (!input.value.trim()) {
+                valido = false;
+                mostrarError(input, "Este campo es obligatorio");
+            } else if (input.type === "email" && !/\S+@\S+\.\S+/.test(input.value)) {
+                valido = false;
+                mostrarError(input, "Ingrese un correo válido");
+            } else if (input.name.toLowerCase().includes("cedula") && !/^\d+$/.test(input.value)) {
+                valido = false;
+                mostrarError(input, "La cédula debe contener solo números");
+            }
+        });
+
+        if (!valido) {
+            event.preventDefault();
+            alert("Por favor, complete correctamente los campos resaltados.");
+        }
+    });
+
+    function mostrarError(input, mensaje) {
+        const error = document.createElement("div");
+        error.classList.add("error");
+        error.textContent = mensaje;
+        input.insertAdjacentElement("afterend", error);
+    }
+
+    // Restricciones de inputs
     const cedulaInput = document.getElementById('id_cedula');
-    cedulaInput.addEventListener('input', function() {
-        this.value = this.value.replace(/[^0-9]/g, '');
-    });
-
+    if(cedulaInput) cedulaInput.addEventListener('input', function() { this.value = this.value.replace(/[^0-9]/g, ''); });
     const nombresInput = document.getElementById('id_nombres');
-    nombresInput.addEventListener('input', function() {
-        this.value = this.value.replace(/[0-9]/g, '');
-    });
-
+    if(nombresInput) nombresInput.addEventListener('input', function() { this.value = this.value.replace(/[0-9]/g, ''); });
     const apellidosInput = document.getElementById('id_apellidos');
-    apellidosInput.addEventListener('input', function() {
-        this.value = this.value.replace(/[0-9]/g, '');
-    });
+    if(apellidosInput) apellidosInput.addEventListener('input', function() { this.value = this.value.replace(/[0-9]/g, ''); });
 </script>
 
-</body>
-</html>
+{% endblock %}

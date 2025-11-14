@@ -1,0 +1,106 @@
+{% extends 'home.html' %}
+{% load static %}
+
+{% block title %}Comparativa por Especialidad{% endblock %}
+
+{% block content %}
+<!-- ===== CONTENEDOR ===== -->
+<div style="background: white; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); padding: 30px; max-width: 1100px; margin: 0 auto;">
+    <h2 style="color: #1c4a7c; text-align:center; margin-bottom: 25px;">📊 Comparativa de Estudiantes por Especialidad</h2>
+
+    <!-- ===== TABLA ===== -->
+    <table id="tablaEspecialidad" class="display nowrap" style="width:100%; border-collapse:collapse; border-radius:8px; overflow:hidden;">
+        <thead>
+            <tr style="background-color:#1c4a7c; color:white;">
+                <th>Especialidad</th>
+                <th>Total</th>
+                <th>Porcentaje</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for d in datos %}
+            <tr style="text-align:center;">
+                <td>{{ d.especialidad__nombre_especialidad }}</td>
+                <td>{{ d.total }}</td>
+                <td>{{ d.porcentaje }}%</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="3" style="padding:15px; text-align:center; color:#666;">No hay datos disponibles.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr style="background-color:#eaf0fa; font-weight:bold;">
+                <th>Total General</th>
+                <th>{{ total_general }}</th>
+                <th>100%</th>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+
+<!-- ===== SCRIPTS DE DATATABLES ===== -->
+<link rel="stylesheet" href="https://cdn.datatables.net/2.0.8/css/dataTables.dataTables.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/3.0.2/css/buttons.dataTables.min.css">
+
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+<script src="https://cdn.datatables.net/2.0.8/js/dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.0.2/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.0.2/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.0.2/js/buttons.print.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+
+<script>
+$(document).ready(function() {
+    $('#tablaEspecialidad').DataTable({
+        responsive: true,
+        pageLength: 10,
+        dom: 'Bfrtip',
+        buttons: [
+            {
+                extend: 'excelHtml5',
+                text: '📗 Exportar a Excel',
+                titleAttr: 'Exportar a Excel',
+                className: 'btn-export'
+            },
+            {
+                extend: 'pdfHtml5',
+                text: '📄 Exportar a PDF',
+                titleAttr: 'Exportar a PDF',
+                className: 'btn-export',
+                orientation: 'landscape',
+                pageSize: 'A4'
+            },
+            {
+                extend: 'print',
+                text: '🖨️ Imprimir',
+                titleAttr: 'Imprimir Tabla',
+                className: 'btn-export'
+            }
+        ],
+        language: {
+            url: "https://cdn.datatables.net/plug-ins/2.0.8/i18n/es-ES.json"
+        }
+    });
+
+    // === Estilo de botones ===
+    $('.btn-export').css({
+        background: 'linear-gradient(90deg, #1c4a7c, #2e6aa3)',
+        color: 'white',
+        border: 'none',
+        borderRadius: '6px',
+        padding: '8px 14px',
+        marginRight: '6px',
+        cursor: 'pointer',
+        fontWeight: 'bold'
+    }).hover(function(){
+        $(this).css('opacity', '0.9');
+    }, function(){
+        $(this).css('opacity', '1');
+    });
+});
+</script>
+{% endblock %}

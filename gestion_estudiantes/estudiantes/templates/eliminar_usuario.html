@@ -1,115 +1,28 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Eliminar Usuario</title>
-    <style>
-        body {
-            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #e8f0ff;
-            color: #333;
-            margin: 0;
-            padding: 0;
-        }
+{% extends 'home.html' %}
+{% load static %}
 
-        header {
-            background: linear-gradient(90deg, #0056b3, #007bff);
-            color: white;
-            text-align: center;
-            padding: 25px 0;
-            font-size: 26px;
-            letter-spacing: 1px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-        }
+{% block title %}Eliminar Usuario{% endblock %}
 
-        main {
-            max-width: 600px;
-            margin: 100px auto;
-            background: #ffffff;
-            padding: 40px 50px;
-            border-radius: 12px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-            text-align: center;
-        }
+{% block content %}
+<div style="max-width:600px; margin:100px auto; background:white; padding:40px 50px; border-radius:12px; box-shadow:0 4px 10px rgba(0,0,0,0.15); text-align:center;">
 
-        h1 {
-            color: #003366;
-            font-size: 24px;
-            margin-bottom: 25px;
-        }
+    <h2 style="color:#003366; margin-bottom:25px;">Confirmar eliminación</h2>
 
-        p {
-            font-size: 17px;
-            margin-bottom: 40px;
-            color: #444;
-        }
+    <p style="font-size:17px; color:#444; margin-bottom:40px;">
+        ¿Estás seguro de que deseas eliminar al usuario<br>
+        <strong>{{ usuario.nombre_usuario }}</strong>?
+    </p>
 
-        .botones button,
-        .botones a {
-            display: inline-block;
-            padding: 12px 25px;
-            margin: 10px;
-            border: none;
-            border-radius: 8px;
-            color: white;
-            font-weight: bold;
-            text-decoration: none;
-            transition: transform 0.2s, background 0.3s;
-            cursor: pointer;
-        }
-
-        .btn-eliminar {
-            background: linear-gradient(90deg, #dc3545, #ff5c75);
-        }
-
-        .btn-eliminar:hover {
-            background: linear-gradient(90deg, #c82333, #ff3b5b);
-            transform: scale(1.05);
-        }
-
-        .btn-cancelar {
-            background: linear-gradient(90deg, #007bff, #339cff);
-        }
-
-        .btn-cancelar:hover {
-            background: linear-gradient(90deg, #0056b3, #007bff);
-            transform: scale(1.05);
-        }
-
-        footer {
-            background-color: #003366;
-            color: white;
-            text-align: center;
-            padding: 15px 0;
-            font-size: 14px;
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            box-shadow: 0 -2px 8px rgba(0,0,0,0.2);
-        }
-    </style>
-</head>
-<body>
-    <header>
-        <strong>🎓 Sistema de Gestión Académica</strong>
-    </header>
-
-    <main>
-        <h1>Confirmar eliminación</h1>
-        <p>¿Estás seguro de que deseas eliminar al usuario<br>
-           <strong>{{ usuario.nombre_usuario }}</strong>?</p>
-
-        <form method="POST">
-            {% csrf_token %}
-            <div class="botones">
-                <button type="submit" class="btn-eliminar">🗑️ Sí, eliminar</button>
-                <a href="{% url 'listar_usuarios' %}" class="btn-cancelar">↩️ Cancelar</a>
-            </div>
-        </form>
-    </main>
-
-    <footer>
-        &copy; {{ now|date:"Y" }} Sistema Académico — Todos los derechos reservados
-    </footer>
-</body>
-</html>
+    <form method="POST">
+        {% csrf_token %}
+        <div style="display:flex; justify-content:center; gap:15px; flex-wrap:wrap;">
+            <button type="submit" style="padding:12px 25px; border:none; border-radius:8px; background:linear-gradient(90deg,#dc3545,#ff5c75); color:white; font-weight:bold; cursor:pointer; transition:all 0.3s;">
+                🗑️ Sí, eliminar
+            </button>
+            <a href="{% url 'listar_usuarios' %}" style="padding:12px 25px; border-radius:8px; background:linear-gradient(90deg,#1c4a7c,#2e6aa3); color:white; font-weight:bold; text-decoration:none; cursor:pointer; transition:all 0.3s;">
+                ↩️ Cancelar
+            </a>
+        </div>
+    </form>
+</div>
+{% endblock %}

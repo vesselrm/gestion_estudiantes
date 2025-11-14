@@ -1,178 +1,87 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Detalle del Estudiante</title>
-    <style>
-        /* ======= ESTILOS GENERALES ======= */
-        body {
-            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #e8f0ff;
-            margin: 0;
-            padding: 0;
-            color: #333;
-        }
+{% extends 'home.html' %}
+{% load static %}
 
-        /* ======= ENCABEZADO ======= */
-        header {
-            background: linear-gradient(90deg, #0056b3, #007bff);
-            color: white;
-            text-align: center;
-            padding: 25px 0;
-            font-size: 26px;
-            letter-spacing: 1px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
+{% block title %}Detalle del Estudiante{% endblock %}
 
-        /* ======= CONTENIDO PRINCIPAL ======= */
-        main {
-            max-width: 700px;
-            margin: 60px auto 100px;
-            background: #ffffff;
-            padding: 30px 40px;
-            border-radius: 12px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-        }
+{% block content %}
+<div style="max-width:720px; margin:60px auto 100px; background:white; padding:40px; border-radius:12px; box-shadow:0 6px 15px rgba(0,0,0,0.1);">
 
-        h1 {
-            color: #003366;
-            text-align: center;
-            margin-bottom: 25px;
-        }
+    <h2 style="color:#003366; text-align:center; margin-bottom:30px; font-size:28px;">Detalle del Estudiante</h2>
 
-        p {
-            font-size: 16px;
-            margin: 10px 0;
-        }
-
-        strong {
-            color: #003366;
-        }
-
-        /* ======= TABLA ======= */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 25px;
-            border-radius: 8px;
-            overflow: hidden;
-        }
-
-        th {
-            background-color: #0056b3;
-            color: white;
-            padding: 10px;
-            text-align: center;
-        }
-
-        td {
-            background-color: #f9f9f9;
-            padding: 10px;
-            text-align: center;
-            border-bottom: 1px solid #ddd;
-        }
-
-        /* ======= BOTONES Y ENLACES ======= */
-        .botones {
-            text-align: center;
-            margin-top: 30px;
-        }
-
-        .botones a {
-            display: inline-block;
-            padding: 10px 20px;
-            margin: 5px;
-            text-decoration: none;
-            border-radius: 8px;
-            color: white;
-            font-weight: bold;
-            transition: transform 0.2s, background 0.3s;
-        }
-
-        .btn-volver {
-            background: linear-gradient(90deg, #007bff, #339cff);
-        }
-
-        .btn-volver:hover {
-            background: linear-gradient(90deg, #0056b3, #007bff);
-            transform: scale(1.05);
-        }
-
-        .btn-editar {
-            background: linear-gradient(90deg, #28a745, #4cd964);
-        }
-
-        .btn-editar:hover {
-            background: linear-gradient(90deg, #218838, #3bd65a);
-            transform: scale(1.05);
-        }
-
-        .btn-eliminar {
-            background: linear-gradient(90deg, #dc3545, #ff5c75);
-        }
-
-        .btn-eliminar:hover {
-            background: linear-gradient(90deg, #c82333, #ff3b5b);
-            transform: scale(1.05);
-        }
-
-        /* ======= PIE DE PÁGINA ======= */
-        footer {
-            background-color: #003366;
-            color: #ffffff;
-            text-align: center;
-            padding: 15px 0;
-            font-size: 14px;
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.2);
-        }
-    </style>
-</head>
-<body>
-    <header>
-        <strong>🎓 Sistema de Gestión Académica</strong>
-    </header>
-
-    <main>
-        <h1>Detalle del Estudiante</h1>
-
+    <div style="margin-bottom:25px; line-height:1.7;">
         <p><strong>Cédula:</strong> {{ estudiante.cedula }}</p>
         <p><strong>Nombres:</strong> {{ estudiante.nombres }}</p>
         <p><strong>Apellidos:</strong> {{ estudiante.apellidos }}</p>
-        <p><strong>Cohorte:</strong> {{ estudiante.cohorte_mes }} {{ estudiante.cohorte_anio }}</p>
-        <p><strong>Especialidad:</strong> {{ estudiante.get_especialidad_display }}</p>
-        <p><strong>Extensión:</strong> {{ estudiante.extension }}</p>
 
-        <h3 style="color:#003366; margin-top:30px;">📄 Documentos Registrados</h3>
-        <table>
-            <tr>
-                <th>Tipo de Documento</th>
-                <th>Estado</th>
+        {% if estudiante.cohorte %}
+        <p><strong>Cohorte:</strong> {{ estudiante.cohorte.nombre_cohorte }} — {{ estudiante.cohorte.mes }} {{ estudiante.cohorte.anio }}</p>
+        {% else %}
+        <p><strong>Cohorte:</strong> No asignada</p>
+        {% endif %}
+
+        {% if estudiante.especialidad %}
+        <p><strong>Especialidad:</strong> {{ estudiante.especialidad.nombre_especialidad }}</p>
+        {% else %}
+        <p><strong>Especialidad:</strong> No asignada</p>
+        {% endif %}
+
+        <p><strong>Extensión:</strong> {{ estudiante.extension }}</p>
+    </div>
+
+    <h3 style="color:#003366; margin-bottom:15px; font-size:22px;">📄 Documentos Registrados</h3>
+    <table style="width:100%; border-collapse:collapse; border-radius:8px; overflow:hidden; margin-bottom:30px; box-shadow:0 2px 5px rgba(0,0,0,0.05);">
+        <thead>
+            <tr style="background:#1c4a7c; color:white; text-align:center;">
+                <th style="padding:12px;">Tipo de Documento</th>
+                <th style="padding:12px;">Estado</th>
             </tr>
+        </thead>
+        <tbody>
             {% for doc in documentos %}
-            <tr>
-                <td>{{ doc.tipo_documento }}</td>
-                <td>{{ doc.estado_documento }}</td>
+            <tr style="text-align:center; background:#f9f9f9; border-bottom:1px solid #ddd;">
+                <td style="padding:12px;">{{ doc.tipo_documento }}</td>
+                <td style="padding:12px;">{{ doc.estado_documento }}</td>
             </tr>
             {% empty %}
             <tr>
-                <td colspan="2">No hay documentos registrados</td>
+                <td colspan="2" style="padding:12px;">No hay documentos registrados</td>
             </tr>
             {% endfor %}
-        </table>
+        </tbody>
+    </table>
 
-        <div class="botones">
-            <a href="{% url 'editar_estudiante' estudiante.id %}" class="btn-editar">✏️ Editar</a>
-            <a href="{% url 'listar_estudiantes' %}" class="btn-volver">← Volver a la lista</a>
-        </div>
-    </main>
+    <div style="display:flex; justify-content:center; gap:25px; flex-wrap:wrap;">
 
-    <footer>
-        &copy; {{ now|date:"Y" }} Sistema Académico — Todos los derechos reservados
-    </footer>
+        {% if request.session.usuario_rol == "Administrador" %}
+        <a href="{% url 'editar_estudiante' estudiante.id %}"
+           style="padding:12px 35px; border-radius:8px; background:linear-gradient(90deg,#1c4a7c,#2e6aa3); color:white;
+           font-weight:bold; text-decoration:none; text-align:center; transition:all 0.3s;">
+            ✏️ Editar
+        </a>
+        {% endif %}
+        <a href="{% url 'listar_estudiantes' %}" 
+           style="padding:12px 30px; border-radius:8px; background:linear-gradient(90deg,#1c4a7c,#2e6aa3); color:white; font-weight:bold; text-decoration:none; text-align:center; transition:all 0.3s;">
+            ← Volver a la lista
+        </a>
+    </div>
 
-    
-</body>
-</html>
+</div>
+
+<style>
+/* Estilo tabla moderno */
+table th, table td {
+    font-size: 15px;
+}
+
+table td {
+    color: #333;
+}
+
+/* Botones hover */
+a:hover {
+    transform: scale(1.05);
+    opacity: 0.9;
+    transition: all 0.3s;
+}
+</style>
+{% endblock %}

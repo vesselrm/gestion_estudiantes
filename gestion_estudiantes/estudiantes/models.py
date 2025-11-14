@@ -1,7 +1,6 @@
 from django.db import models
 from django.utils import timezone
-
-
+from datetime import datetime
 
 # ===== EXTENSIONES =====
 class Extension(models.Model):
@@ -11,16 +10,17 @@ class Extension(models.Model):
     def __str__(self):
         return self.nombre_extension
 
-# ===== ESTUDIANTES =====
-class Estudiante(models.Model):
-    # Opciones para Especialidad (mismo contenido que el modelo anterior)
-    OPCIONES_ESPECIALIDAD = [
-        ('Inicial', 'Inicial'),
-        ('Primaria', 'Primaria'),
-        ('Informatica', 'Informática'),
-    ]
 
-    # Opciones para Mes y Año (de Cohorte)
+# ===== ESPECIALIDADES =====
+class Especialidad(models.Model):
+    nombre_especialidad = models.CharField(max_length=100, unique=True)
+
+    def __str__(self):
+        return self.nombre_especialidad
+
+
+# ===== COHORTES =====
+class Cohorte(models.Model):
     MESES = [
         ('Enero', 'Enero'),
         ('Febrero', 'Febrero'),
@@ -36,18 +36,34 @@ class Estudiante(models.Model):
         ('Diciembre', 'Diciembre'),
     ]
 
-    ANIOS = [(str(a), str(a)) for a in range(1900, 2101)]
+    # Generar lista de años desde 1900 hasta el actual
+    AÑOS = [(str(a), str(a)) for a in range(1900, datetime.now().year + 1)]
 
+    nombre_cohorte = models.CharField(max_length=100, unique=True, verbose_name="Nombre de Cohorte")
+    mes = models.CharField(max_length=20, choices=MESES)
+    anio = models.CharField(max_length=4, choices=AÑOS)
+
+    class Meta:
+        unique_together = ('mes', 'anio')
+        verbose_name = "Cohorte"
+        verbose_name_plural = "Cohortes"
+
+    def __str__(self):
+        return f"{self.nombre_cohorte} ({self.mes} {self.anio})"
+
+
+# ===== ESTUDIANTES =====
+class Estudiante(models.Model):
     cedula = models.CharField(max_length=20, unique=True)
     nombres = models.CharField(max_length=100)
     apellidos = models.CharField(max_length=100)
-    especialidad = models.CharField(max_length=100, choices=OPCIONES_ESPECIALIDAD)
-    cohorte_mes = models.CharField(max_length=20, choices=MESES, verbose_name="Mes de Cohorte")
-    cohorte_anio = models.CharField(max_length=10, choices=ANIOS, verbose_name="Año de Cohorte")
-    extension = models.ForeignKey('Extension', on_delete=models.CASCADE)
+    especialidad = models.ForeignKey(Especialidad, on_delete=models.CASCADE)
+    cohorte = models.ForeignKey(Cohorte, on_delete=models.CASCADE)
+    extension = models.ForeignKey(Extension, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"{self.nombres} {self.apellidos} - {self.especialidad} ({self.cohorte_mes} {self.cohorte_anio})"
+        return f"{self.nombres} {self.apellidos} - {self.especialidad} ({self.cohorte})"
+
 
 # ===== DOCUMENTOS POR ESTUDIANTE =====
 class DocumentoEstudiante(models.Model):

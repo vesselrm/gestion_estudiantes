@@ -1,5 +1,5 @@
 from django import forms
-from .models import Estudiante, Extension, Usuario
+from .models import Estudiante, Extension, Usuario, Especialidad, Cohorte
 import re
 
 
@@ -11,14 +11,12 @@ class EstudianteForm(forms.ModelForm):
             'nombres',
             'apellidos',
             'especialidad',
-            'cohorte_mes',
-            'cohorte_anio',
-            'extension'
+            'cohorte',
+            'extension',
         ]
         widgets = {
             'especialidad': forms.Select(attrs={'class': 'form-select'}),
-            'cohorte_mes': forms.Select(attrs={'class': 'form-select'}),
-            'cohorte_anio': forms.Select(attrs={'class': 'form-select'}),
+            'cohorte': forms.Select(attrs={'class': 'form-select'}),
             'extension': forms.Select(attrs={'class': 'form-select'}),
         }
 
@@ -80,3 +78,14 @@ class UsuarioForm(forms.ModelForm):
         if len(contrasena) < 6:
             raise forms.ValidationError("La contraseña debe tener al menos 6 caracteres.")
         return contrasena
+
+
+class CohorteForm(forms.ModelForm):
+    class Meta:
+        model = Cohorte
+        fields = '__all__'
+
+class EspecialidadForm(forms.ModelForm):
+    class Meta:
+        model = Especialidad
+        fields = '__all__'
